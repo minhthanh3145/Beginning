@@ -6,12 +6,13 @@ void Merge(int*arr,int low,int high,int mid);
 
 void mergeSort(int*arr,int low,int high)
 {
-    if(high-low<1)
-        return;
-    int mid=(high+low)/2;
+    if(low<high)
+    {
+        int mid=(high+low)/2;
     mergeSort(arr,low,mid);
     mergeSort(arr,mid+1,high);
     Merge(arr,low,high,mid);
+    }
 }
 
 void Merge(int*arr,int low,int high,int mid)
@@ -22,7 +23,6 @@ void Merge(int*arr,int low,int high,int mid)
     {
         temp[i]=arr[i];
     }
-
     int i=low;
     int j=mid+1;
     int k=low;

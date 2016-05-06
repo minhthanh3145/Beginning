@@ -1,0 +1,98 @@
+#include<iostream>
+
+using namespace std;
+
+int max(int a,int b)
+{
+    return(a>b?a:b);
+}
+int knapSack01(int**&table,int*val,int*weight,int n,int maxWeight)
+{
+
+
+    for(int w=0;w<=maxWeight;w++)
+    {
+        for(int i=0;i<n;i++)
+        {
+            if(w==0)
+                table[w][i]=0;
+            else if(i==0)
+            {
+                if(w<weight[i])
+                    table[w][i]=0;
+                else
+                    table[w][i]=val[i];
+            }
+            else
+            {
+                if(w<weight[i])
+                    table[w][i] = table[w][i-1];
+                else
+                    table[w][i] = max(table[w][i-1],val[i] + table[w-weight[i]][i-1]);
+            }
+        }
+    }
+    return table[maxWeight][n-1];
+}
+
+void reconstruct(int**table,int i,int*val,int*w,int maxWeight)
+{
+
+        if(table[maxWeight][i]!=table[maxWeight][i-1])
+    {
+        cout<<"valWeight["<<val[i]<<"]["<<w[i]<<"]";
+        if(i-1 == -1)
+            cout<<endl;
+        else
+            {
+                cout<<" + ";
+                return reconstruct(table,i-1,val,w,maxWeight-w[i]);
+            }
+    }
+    else
+        return reconstruct(table,i-1,val,w,maxWeight);
+
+}
+
+int main()
+{
+    cout<<" --------------- 0/1 KNAPSACK PROBLEM ------------"<<endl;
+    cout<<" This program receives an input of weights and values of items "<<endl;
+    cout<<" and output the optimized solution for a desired weight "<<endl;
+    cout<<" -----------------------o0o------------------------"<<endl;
+    int n;
+
+    int*val,*weight;
+    int maxWeight;
+    cout<<" How many items ? :";
+    cin>>n;
+    val=new int[n];
+    weight=new int[n];
+    cout<<" Input items in increasing order in term of weight please "<<endl;
+    for(int i=0;i<n;i++)
+    {
+        cout<<" ITEM NO."<<i<<" : "<<endl;
+        cout<<" Value "<<i<<" : ";
+        cin>>val[i];
+        cout<<" Weight "<<i<<" : ";
+        cin>>weight[i];
+    }
+
+    cout<<" Maximum weight : ";
+    cin>>maxWeight;
+    int**table=new int*[maxWeight];
+    for(int i=0;i<=maxWeight;i++)
+        table[i]=new int[n];
+
+    cout<<" Maximum achievable value is :"<<knapSack01(table,val,weight,n,maxWeight)<<endl;
+    cout<<" Chosen items : ";
+    reconstruct(table,n-1,val,weight,maxWeight);
+
+    for(int i=0;i<=maxWeight;i++)
+        delete[]table;
+
+    delete[]table;
+    delete[]val;
+    delete[]weight;
+    return 0;
+}
